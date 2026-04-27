@@ -1,0 +1,16 @@
+project_id  = "your-gcp-project-id"
+region      = "us-central1"
+zone        = "us-central1-a"
+name_prefix = "cse"
+
+certificate_domains = [
+  "app.example.com"
+]
+
+trusted_ssh_source_ranges = [
+  "35.235.240.0/20"
+]
+
+ssh_admin_members = [
+  "user:your-email@example.com"
+]
