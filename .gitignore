@@ -1,0 +1,38 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+tfplan
+*.tfplan
+tfplan.json
+
+# Secrets / credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.json.credentials
+credentials.json
+service-account.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Go
+*.exe
+*.test
+coverage.out
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
