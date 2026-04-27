@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.env.*
+*.pem
+*.key
+*.tfvars
+*.tfstate
+*.tfstate.*
+__pycache__/
+*.pyc
+tests/
+docs/
+README.md
