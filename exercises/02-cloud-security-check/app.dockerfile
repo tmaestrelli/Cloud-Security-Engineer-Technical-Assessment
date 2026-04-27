@@ -6,7 +6,7 @@
 # evidence and adds security review comments above each risky pattern.
 # -----------------------------------------------------------------------------
 
-FROM UBUNTU:18.04
+FROM ubuntu:18.04
 # ISSUE:
 # ubuntu:18.04 is an old and broad operating system base image.
 # It increases the attack surface and may contain outdated packages.
