@@ -1,15 +1,233 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Remediated CloudFormation template for Exercise 2.
+  The original insecure patterns are preserved as comments for review purposes.
+  The active resources implement least privilege and S3 security best practices.
+
+Parameters:
+  AppUserName:
+    Type: String
+    Default: RestrictedS3ReadOnlyUser
+    Description: >
+      IAM user name for this assessment example.
+      In production, prefer IAM Identity Center, federation, or IAM roles
+      instead of long-lived IAM users.
 
 Resources:
   MyBucket:
+    # SECURITY ISSUE:
+    # The original bucket relies entirely on AWS defaults and does not explicitly
+    # define security controls. That makes the template weak from a governance
+    # perspective because the intended security posture is not visible in code.
+    #
+    # REMEDIATION:
+    # The bucket below explicitly defines public access blocking, encryption,
+    # versioning, ownership controls, and governance tags.
     Type: AWS::S3::Bucket
+    # BEST PRACTICE:
+    # Retain data-bearing resources when the stack is deleted.
+    #
+    # WHY:
+    # Accidental stack deletion should not automatically destroy stored data.
+    # In real environments, this should be aligned with data retention and
+    # cleanup procedures.
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      # BEST PRACTICE:
+      # Block public ACLs and public bucket policies at the bucket level.
+      #
+      # WHY:
+      # S3 public exposure is one of the most common cloud data exposure risks.
+      # Explicit public access blocking reduces the chance of accidental exposure
+      # through ACLs or bucket policies.
+      PublicAccessBlockConfiguration:
+      BlockPublicAcls: true
+      IgnorePublicAcls: true
+      BlockPublicPolicy: true
+      RestrictPublicBuckets: true  
+      # BEST PRACTICE:
+      # Enable default server-side encryption.
+      #
+      # WHY:
+      # Objects should be encrypted at rest by default. This provides a baseline
+      # data protection control even if the uploading client does not explicitly
+      # request encryption.
+      #
+      # NOTE:
+      # SSE-S3 is used here as a simple baseline. For highly sensitive data,
+      # SSE-KMS with a customer-managed KMS key may be preferable.
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+      
+      # BEST PRACTICE:
+      # Enable versioning on the bucket.
+      #
+      # WHY:
+      # Versioning helps recover from accidental deletion, accidental overwrite,
+      # and some ransomware-style object modification scenarios.
+      VersioningConfiguration:
+        Status: Enabled
+      
+      # BEST PRACTICE:
+      # Enforce bucket-owner object ownership and disable ACL-based ownership.
+      #
+      # WHY:
+      # ACLs are harder to govern than bucket policies and IAM policies.
+      # BucketOwnerEnforced simplifies ownership and access control.
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      
+      # BEST PRACTICE:
+      # Tag resources with ownership, management, classification, and security context.
+      #
+      # WHY:
+      # Tags support governance, cost allocation, incident response, ownership
+      # tracking, and automated policy enforcement.
+      Tags:
+        - Key: ManagedBy
+          Value: CloudFormation
+        - Key: SecurityControl
+          Value: LeastPrivilege
+        - Key: DataClassification
+          Value: Internal
+        - Key: Environment
+          Value: Assessment
+    # ---------------------------------------------------------------------------
+    # ORIGINAL INSECURE BEHAVIOR:
+    #
+    # The original S3 bucket had no bucket policy enforcing secure transport.
+    #
+    # SECURITY ISSUE:
+    # Without a TLS-only policy, clients may access S3 over plaintext HTTP.
+    #
+    # REMEDIATION:
+    # The policy below denies all S3 actions when aws:SecureTransport is false.
+    # ---------------------------------------------------------------------------
+
+    SecureBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+      Bucket: !Ref MyBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        # BEST PRACTICE:
+        # Deny insecure transport.
+        #
+        # WHY:
+        # Data should not be transmitted to or from S3 over plaintext HTTP.
+        # This condition enforces TLS for bucket and object access.
+        - Sid: DenyInsecureTransport
+          Effect: Deny
+          Principal: "*"
+          Action: "s3:*"
+          Resource:
+            - !GetAtt MyBucket.Arn
+            - !Sub "${MyBucket.Arn}/*"
+          Condition:
+            Bool:
+              aws:SecureTransport: false
+  
+  # ---------------------------------------------------------------------------
+  # SECURITY ISSUE:
+  # The original policy is attached directly to an IAM user as an inline policy.
+  # This makes governance harder and encourages privilege sprawl.
+  # In addition, the original policy also  grants unrestricted access to all AWS
+  # services and all resources.
+  # If the credentials are compromised, the attacker could access data,
+  # change IAM permissions, modify infrastructure, disable logging, and
+  # establish persistence.
+  #
+  # REMEDIATION:
+  # The active template below:
+  # - Keeps an IAM user only because the exercise includes one.
+  # - Places the user in a group.
+  # - Attaches a scoped customer-managed policy to the group.
+  # - Allows only read access to the specific S3 bucket created by this stack.
+  #
+  # PRODUCTION NOTE:
+  # For real human access, prefer IAM Identity Center or federation.
+  # For workload access, prefer IAM roles.
+  # ---------------------------------------------------------------------------
   MyIAMUser:
     Type: AWS::IAM::User
     Properties:
-      UserName: "UnrestrictedUser"
-      Policies:
-        - PolicyName: "FullAccess"
-          PolicyDocument:
-            Statement:
-              - Effect: Allow
-                Action: "*"
-                Resource: "*"
+      UserName: !Ref AppUserName
+
+      # BEST PRACTICE:
+      # Assign permissions through groups or roles rather than directly attaching
+      # broad inline policies to users.
+      #
+      # WHY:
+      # Group-based access is easier to review, govern, and revoke consistently.
+      Groups:
+        - !Ref RestrictedIAMGroup
+
+    Tags:
+      - Key: ManagedBy
+        Value: CloudFormation
+      - Key: SecurityControl
+        Value: LeastPrivilege
+      - Key: Environment
+        Value: Assessment
+
+    RestrictedIAMGroup:
+      Type: AWS::IAM::Group
+      Properties:
+        GroupName: RestrictedS3ReadOnlyGroup
+      RestrictedS3ReadOnlyPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: RestrictedS3ReadOnlyAssessmentPolicy
+      Description: >
+        Least-privilege read-only access to the assessment S3 bucket.
+
+      Groups:
+        - !Ref RestrictedIAMGroup
+
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          
+          # BEST PRACTICE:
+          # Scope permissions to specific actions.
+          #
+          # WHY:
+          # The original Action "*" allowed every AWS API action.
+          # This policy only allows the minimum S3 actions needed for read-only access.
+          - Sid: AllowListSpecificBucket
+            Effect: Allow
+            Action:
+              - s3:ListBucket
+            Resource: !GetAtt MyBucket.Arn
+
+          # BEST PRACTICE:
+          # Scope permissions to specific resources.
+          #
+          # WHY:
+          # The original Resource "*" allowed access to every resource in the account.
+          # This policy only allows reading objects from the specific bucket created
+          # by this stack.
+          - Sid: AllowReadObjectsFromSpecificBucket
+            Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: !Sub "${MyBucket.Arn}/*"
+
+Outputs:
+  BucketName:
+    Description: Name of the secure S3 bucket.
+    Value: !Ref MyBucket
+
+  RestrictedUserName:
+    Description: Name of the restricted IAM user.
+    Value: !Ref MyIAMUser
+
+  RestrictedGroupName:
+    Description: IAM group used to assign least-privilege access.
+    Value: !Ref RestrictedIAMGroup
