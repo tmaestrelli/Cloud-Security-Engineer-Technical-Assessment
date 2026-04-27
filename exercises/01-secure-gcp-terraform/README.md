@@ -51,34 +51,7 @@ The VM uses a dedicated service account instead of the default Compute Engine se
 
 ## Example usage
 
-```hcl
-provider "google" {
-  project = "my-project-id"
-  region  = "us-central1"
-}
-
-module "secure_gcp_web" {
-  source = "./terraform/modules/secure-gcp-web"
-
-  project_id = "my-project-id"
-
-  name_prefix = "cse"
-  region      = "us-central1"
-  zone        = "us-central1-a"
-
-  certificate_domains = [
-    "app.example.com"
-  ]
-
-  trusted_ssh_source_ranges = [
-    "35.235.240.0/20"
-  ]
-
-  ssh_admin_members = [
-    "user:admin@example.com"
-  ]
-}
-```
+To test the module, run Terraform from `exercises/01-secure-gcp-terraform/examples`.
 
 ## Validation Scope
 
