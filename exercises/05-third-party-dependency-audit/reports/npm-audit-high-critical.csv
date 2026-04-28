@@ -1,0 +1,46 @@
+package,vulnerable_dependency,severity,title,vulnerable_range,is_direct,fix_available,url
+async,async,high,Prototype Pollution in async,>=2.0.0 <2.6.4,False,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-fwr7-v2mv-hh25
+bson,bson,critical,Deserialization of Untrusted Data in bson,<1.1.4,False,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-v8w9-2789-6hhr
+debug,debug,high,debug Inefficient Regular Expression Complexity vulnerability,<2.6.9,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-9vvw-cc9w-f27h
+debug,ms,high,Transitive vulnerability via ms,<=2.6.8,False,Yes: express@4.22.1,
+express,cookie,high,Transitive vulnerability via cookie,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+express,debug,high,Transitive vulnerability via debug,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+express,fresh,high,Transitive vulnerability via fresh,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+express,path-to-regexp,high,Transitive vulnerability via path-to-regexp,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+express,qs,high,Transitive vulnerability via qs,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+express,send,high,Transitive vulnerability via send,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+express,serve-static,high,Transitive vulnerability via serve-static,<=4.21.0 || 5.0.0-alpha.1 - 5.0.0,True,Yes: express@4.22.1,
+fresh,fresh,high,Regular Expression Denial of Service in fresh,<0.5.2,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-9qj9-36jm-prpv
+jsonwebtoken,jsonwebtoken,high,jsonwebtoken unrestricted key type could lead to legacy keys usage ,<=8.5.1,True,Yes: jsonwebtoken@9.0.3 (semver-major),https://github.com/advisories/GHSA-8cf7-32gw-wr33
+lodash,lodash,high,Command Injection in lodash,<4.17.21,True,Yes: lodash@4.18.1,https://github.com/advisories/GHSA-35jh-r3h4-6jhm
+lodash,lodash,high,Prototype Pollution in lodash,<4.17.11,True,Yes: lodash@4.18.1,https://github.com/advisories/GHSA-4xc9-xhrj-v574
+lodash,lodash,critical,Prototype Pollution in lodash,<4.17.12,True,Yes: lodash@4.18.1,https://github.com/advisories/GHSA-jf85-cpcp-j695
+lodash,lodash,high,Prototype Pollution in lodash,>=3.7.0 <4.17.19,True,Yes: lodash@4.18.1,https://github.com/advisories/GHSA-p6mc-m468-83gw
+lodash,lodash,high,lodash vulnerable to Code Injection via `_.template` imports key names,>=4.0.0 <=4.17.23,True,Yes: lodash@4.18.1,https://github.com/advisories/GHSA-r5fr-rjxr-66jc
+mime,mime,high,mime Regular Expression Denial of Service when MIME lookup performed on untrusted user input,<1.4.1,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-wrvr-8mpx-r7pp
+minimist,minimist,critical,Prototype Pollution in minimist,<0.2.4,False,Yes: mocha@11.7.5 (semver-major),https://github.com/advisories/GHSA-xvch-5gv4-984h
+mkdirp,minimist,critical,Transitive vulnerability via minimist,0.4.1 - 0.5.1,False,Yes: mocha@11.7.5 (semver-major),
+mocha,diff,critical,Transitive vulnerability via diff,0.14.0 - 7.2.0,True,Yes: mocha@11.7.5 (semver-major),
+mocha,mkdirp,critical,Transitive vulnerability via mkdirp,0.14.0 - 7.2.0,True,Yes: mocha@11.7.5 (semver-major),
+mongodb,mongodb,high,Denial of Service in mongodb,<3.1.13,False,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-mh5c-679w-hh4r
+mongodb,mongodb-core,critical,Transitive vulnerability via mongodb-core,<=3.1.12,False,Yes: mongoose@9.5.0 (semver-major),
+mongodb-core,bson,critical,Transitive vulnerability via bson,<=3.1.1,False,Yes: mongoose@9.5.0 (semver-major),
+mongoose,mongoose,high,automattic/mongoose vulnerable to Prototype pollution via Schema.path,<5.13.15,True,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-f825-f98c-gj3g
+mongoose,mongoose,critical,Mongoose Prototype Pollution vulnerability,<5.13.20,True,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-9m93-w8w6-76hh
+mongoose,mongoose,critical,Mongoose Vulnerable to Prototype Pollution in Schema Object,<5.13.15,True,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-h8hf-x3f4-xwgp
+mongoose,mongoose,critical,Mongoose search injection vulnerability,<6.13.6,True,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-vg7j-7cwx-8wgw
+mongoose,mongoose,high,Mongoose search injection vulnerability,>=3.6.0-rc0 <5.13.23,True,Yes: mongoose@9.5.0 (semver-major),https://github.com/advisories/GHSA-m7xq-9374-9rvx
+mongoose,async,critical,Transitive vulnerability via async,<=6.13.5,True,Yes: mongoose@9.5.0 (semver-major),
+mongoose,bson,critical,Transitive vulnerability via bson,<=6.13.5,True,Yes: mongoose@9.5.0 (semver-major),
+mongoose,mongodb,critical,Transitive vulnerability via mongodb,<=6.13.5,True,Yes: mongoose@9.5.0 (semver-major),
+mongoose,mpath,critical,Transitive vulnerability via mpath,<=6.13.5,True,Yes: mongoose@9.5.0 (semver-major),
+mongoose,mquery,critical,Transitive vulnerability via mquery,<=6.13.5,True,Yes: mongoose@9.5.0 (semver-major),
+path-to-regexp,path-to-regexp,high,path-to-regexp outputs backtracking regular expressions,<0.1.10,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-9wv6-86v2-598j
+path-to-regexp,path-to-regexp,high,path-to-regexp contains a ReDoS,<0.1.12,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-rhx6-c78j-4q9w
+path-to-regexp,path-to-regexp,high,path-to-regexp vulnerable to Regular Expression Denial of Service via multiple route parameters,<0.1.13,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-37ch-88jc-xwx2
+qs,qs,high,Prototype Pollution Protection Bypass in qs,>=6.3.0 <6.3.2,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-gqgv-6jq5-jjj9
+qs,qs,high,qs vulnerable to Prototype Pollution,>=6.3.0 <6.3.3,False,Yes: express@4.22.1,https://github.com/advisories/GHSA-hrpp-h998-j3pp
+send,debug,high,Transitive vulnerability via debug,<=0.18.0,False,Yes: express@4.22.1,
+send,fresh,high,Transitive vulnerability via fresh,<=0.18.0,False,Yes: express@4.22.1,
+send,mime,high,Transitive vulnerability via mime,<=0.18.0,False,Yes: express@4.22.1,
+send,ms,high,Transitive vulnerability via ms,<=0.18.0,False,Yes: express@4.22.1,
